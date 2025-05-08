@@ -1,6 +1,7 @@
 library(here)
-
-dir <- "/data/2025-05-06_MEB-EMAE"
+getwd()
+# 1- combine raw data into single csv ----
+dir <- "2025-05-06_MEB-EMAE/data/"
 setwd(file.path("/Users/aymeric.hermann/GitHub/sem-eds-data-processing",dir))
 
 ### Pre-processing
@@ -97,7 +98,6 @@ for (file in files) {
   }
 }
 
-
 ### Read TXT and save to CSV
 # read txt
 output <- read.csv("combined_output.txt")
@@ -112,6 +112,16 @@ d$id <- sub("_\\d+$", "", d$id)
 write.csv(d, "combined_output.csv", row.names = FALSE)
 
 
+# 2- visualize raw data ----
+my_theme <- theme_classic() + 
+  theme(axis.line=element_blank()) +
+  theme(plot.title = element_blank(),
+        axis.title = element_text(size = 11), axis.text = element_text(size = 11),
+        panel.border = element_rect(colour="black", fill = NA, linewidth = 1),
+        legend.position="right"#, aspect.ratio=1
+  )
+library(viridis)
+
 ### check for potential outliers
 # Compute variability (mean, sd, range) for each duplicated ID
 var <- d %>%
@@ -124,45 +134,64 @@ var <- d %>%
 var %>% print(n=23)
 
 # vizualise
-my_theme <- theme_classic() + 
-  theme(axis.line=element_blank()) +
-  theme(plot.title = element_blank(),
-        axis.title = element_text(size = 11), axis.text = element_text(size = 11),
-        panel.border = element_rect(colour="black", fill = NA, linewidth = 1),
-        legend.position="right"#, aspect.ratio=1
-        )
-library(viridis)
-
 var_O <- ggplot(d, aes(x = id, y = O, fill = id)) +
-  geom_boxplot() +
-  scale_fill_viridis_d(option = "D") +  # Discrete viridis scale
-  labs(title = "O Variability", y = "O", x = "O") +
-  my_theme + theme(axis.text.x = element_text(angle = 45, hjust = 1))
-var_Si <- ggplot(d, aes(x = id, y = Si, fill = id)) +
-  geom_boxplot() +
-  scale_fill_viridis_d(option = "D") +  # Discrete viridis scale
-  labs(title = "Si Variability", y = "Si", x = "Si") +
-  my_theme + theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
+  geom_boxplot(outlier.shape = NA) +  # hide default outliers to avoid duplication
+  geom_jitter(aes(color = id), width = 0.2, size = 1.5, alpha = 0.7) +  # adds points
+  scale_fill_viridis_d(option = "D") +
+  scale_color_viridis_d(option = "D") +  # match point color to fill
+  labs(title = "O Variability", y = "O", x = "id") + my_theme + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5)) +
+  theme(legend.position = "none")
 var_O
+
+var_Si <- ggplot(d, aes(x = id, y = Si, fill = id)) +
+  geom_boxplot(outlier.shape = NA) +  # hide default outliers to avoid duplication
+  geom_jitter(aes(color = id), width = 0.2, size = 1.5, alpha = 0.7) +  # adds points
+  scale_fill_viridis_d(option = "D") +
+  scale_color_viridis_d(option = "D") +  # match point color to fill
+  labs(title = "Si Variability", y = "Si", x = "id") + my_theme + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5)) +
+  theme(legend.position = "none")
 var_Si
 
-var_comp <- ggplot(data = var, aes(x = sd_O, y = sd_Si, group = id, color = id)) + 
+var_K <- ggplot(d, aes(x = id, y = K, fill = id)) +
+  geom_boxplot(outlier.shape = NA) +  # hide default outliers to avoid duplication
+  geom_jitter(aes(color = id), width = 0.2, size = 1.5, alpha = 0.7) +  # adds points
+  scale_fill_viridis_d(option = "D") +
+  scale_color_viridis_d(option = "D") +  # match point color to fill
+  labs(title = "K Variability", y = "K", x = "id") + my_theme + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5)) +
+  theme(legend.position = "none")
+var_K
+
+ggplot(data = d, aes(x = id, y = O/Si, group = id, color = id)) + 
+  geom_point(size = 2) + scale_color_viridis_d(option = "D") + 
+  my_theme + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5),
+        legend.position = "none")
+
+ggplot(data = var, aes(x = sd_O, y = sd_Si, group = id, color = id)) + 
   geom_point(size = 2) +
   scale_color_viridis_d(option = "D") +  # Use color scale, not fill
   labs(title = "O-Si variability correlation", y = "sd_Si", x = "sd_O") +
-  my_theme
-var_comp
+  geom_abline(size = .5, linetype = "dashed", col = "black") +
+  scale_x_continuous(limits=c(0, 3.5)) + 
+  scale_y_continuous(limits=c(0, 3.5)) +
+  my_theme + theme(aspect.ratio=1, legend.position = "none")
 
 #save
-setwd("~/GitHub/sem-eds-data-processing")
+setwd("~/GitHub/sem-eds-data-processing/2025-05-06_MEB-EMAE")
 require(patchwork)
 
-pdf(("fig/2025-05-06_MEB-EMAE/var.pdf"), width=8, height=12)
+pdf(("fig/var.pdf"), width=8, height=12)
 var_O /
   var_Si /
-  var_comp
+  var_K
 dev.off()
+
+
+
+
 
 library(tidyverse)
 # Group by id and average columns 2 to 11
