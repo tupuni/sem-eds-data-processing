@@ -171,7 +171,7 @@ d_conv <- d %>%
 # summarise and average
 d_sum <- d_conv %>% 
   group_by(id) %>% 
-  summarise_at(vars('SiO2':'K2O'), mean, na.rm = F)
+  summarise_at(vars('SiO2':'Na2O'), mean, na.rm = F)
 
 # save to CSV
 dir <- "2025-05-06_MEB-EMAE/data"

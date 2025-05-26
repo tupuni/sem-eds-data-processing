@@ -1,0 +1,24 @@
+coquillages: Si à enlever car peut être de la pollution issue des sols
+Weight % au MEB = Weight % au PXRF
+Enlever O des valeurs converties
+
+Error correspond à Weight%
+
+A enlever:
+Net Int.	K Ratio	Z	A	F
+
+
+
+Minéraux:
+Al-Si-O en dernier
+
+FeSi5
+CaMgSi3O6
+
+
+Pour les shells:
+Commencer par le Ca, puis C, puis O
+CaCO3 : carbonate de calcium = calcite ou aragonite (trancher avec Raman spec)
+
+
+
