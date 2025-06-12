@@ -3,7 +3,9 @@ library(tidyverse)
 
 getwd()
 # 1- combine raw data into single csv ----
-dir <- "2025-05-06_MEB-EMAE/data/raw_data"
+#dir <- "2025-05-06_MEB-EMAE/data/raw_data"
+dir <- "2025-06-12_MEB-EMAE/data/raw_data"
+
 setwd(file.path("/Users/aymeric.hermann/GitHub/sem-eds-data-processing",dir))
 
 ### Pre-processing
@@ -163,7 +165,7 @@ d_conv <- d %>%
     'MnO' = d[,'Mn'] * fact['Mn-MnO',], 
     'FeO' = d[,'Fe'] * fact['Fe-FeO',], 
     'Fe2O3' = d[,'Fe'] * fact['Fe-Fe2O3',]
-    ) %>%
+  ) %>%
   dplyr::select(
     "id","SiO2","TiO2","Al2O3","Fe2O3",
     "CaO","MgO","K2O","Na2O")
@@ -174,7 +176,9 @@ d_sum <- d_conv %>%
   summarise_at(vars('SiO2':'Na2O'), mean, na.rm = F)
 
 # save to CSV
-dir <- "2025-05-06_MEB-EMAE/data"
+#dir <- "2025-05-06_MEB-EMAE/data"
+dir <- "2025-06-12_MEB-EMAE/data"
+
 setwd(file.path("/Users/aymeric.hermann/GitHub/sem-eds-data-processing",dir))
 getwd()
 write.csv(d_sum, "combined_output_conv.csv", row.names = FALSE)
