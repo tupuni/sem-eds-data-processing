@@ -17,7 +17,7 @@ system("bash -c 'for file in *.csv; do
   echo \"$file has $rows data rows\"
 done'")
 
-### Correct manually
+### Correct manually (in textedit rather than excel)
 
 ### Remove the first 12 rows and transform into txt files from each CSV file 
 system("for file in *.csv; do tail -n +13 \"$file\" > \"${file%.csv}.txt\"; done")
@@ -113,7 +113,6 @@ names(d)[names(d) == "Element"] <- "id"
 # recode ids by extracting the prefix before the final underscore
 d$id <- sub("_\\d+$", "", d$id)
 
-
 # 2-convert raw data ----
 
 # Typically raw SEM data are provided in percentage of atomic weight (Wt %).
@@ -181,5 +180,7 @@ dir <- "2025-06-12_MEB-EMAE/data"
 
 setwd(file.path("/Users/aymeric.hermann/GitHub/sem-eds-data-processing",dir))
 getwd()
+
+write.csv(d, "combined_output.csv", row.names = FALSE)
 write.csv(d_sum, "combined_output_conv.csv", row.names = FALSE)
 

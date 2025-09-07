@@ -1,12 +1,15 @@
 library(here)
 library(tidyverse)
 
+setwd(file.path("/Users/aymeric.hermann/GitHub/sem-eds-data-processing"))
+
 getwd()
 
+
 # load data
-d <- read.csv("2025-05-06_MEB-EMAE/data/combined_output.csv", 
+d <- read.csv("2025-06-12_MEB-EMAE/data/combined_output.csv", 
               header=TRUE, sep=",", stringsAsFactors=FALSE)
-d_sum <- read.csv("2025-05-06_MEB-EMAE/data/combined_output_conv.csv", 
+d_sum <- read.csv("2025-06-12_MEB-EMAE/data/combined_output_conv.csv", 
                 header=TRUE, sep=",", stringsAsFactors=FALSE)
 
 # 1- visualize raw data ----
@@ -77,7 +80,9 @@ ggplot(data = var, aes(x = sd_O, y = sd_Si, group = id, color = id)) +
   my_theme + theme(aspect.ratio=1, legend.position = "none")
 
 #save
-setwd("~/GitHub/sem-eds-data-processing/2025-05-06_MEB-EMAE")
+#setwd("~/GitHub/sem-eds-data-processing/2025-05-06_MEB-EMAE")
+setwd("~/GitHub/sem-eds-data-processing/2025-06-12_MEB-EMAE")
+
 require(patchwork)
 
 pdf(("fig/var_raw.pdf"), width=8, height=12)
@@ -143,7 +148,9 @@ K2O_SiO2 <- K2O_SiO2_bg +
 K2O_SiO2
 
 #save
-setwd("~/GitHub/sem-eds-data-processing/2025-05-06_MEB-EMAE")
+#setwd("~/GitHub/sem-eds-data-processing/2025-05-06_MEB-EMAE")
+setwd("~/GitHub/sem-eds-data-processing/2025-06-12_MEB-EMAE")
+
 require(patchwork)
 #save
 pdf(("fig/K2O_SiO2.pdf"), width=8, height=4)
